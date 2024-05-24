@@ -83,12 +83,12 @@ genre = st.sidebar.text_input('Genre')
 if st.sidebar.button('Crear nuevo filme'):
     if name and company and director and genre:
         new_film = {'name': name, 'company': company, 'director': director, 'genre': genre}
-        try:
-            db.collection('movies').add(new_film)  # Inserta el nuevo filme en Firestore
+        if add_new_film(new_film):
             st.sidebar.success('Filme agregado exitosamente!')
             st.write("Nuevo filme agregado: ", new_film)
+            # Limpiar la caché para que los datos se actualicen
             load_data.clear_cache()
-        except Exception as e:
-            st.sidebar.error(f'Error al agregar el filme: {e}')
+        # Refrescar los datos para incluir el nuevo registro
+        data = load_data()
     else:
         st.sidebar.error('Por favor, completa todos los campos.')
