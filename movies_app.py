@@ -22,7 +22,7 @@ def load_data():
   data = pd.DataFrame(data_dict)
   return data
 
-# Cargar datos usando la función cacheada
+# Cargar datos usando la función
 data = load_data()
 
 # Checkbox para mostrar todos los filmes
@@ -47,12 +47,12 @@ def search_films():
         st.write(f'{len(filtered_data)} filme(s) encontrado(s).')
         st.dataframe(filtered_data)
 
-# Ejecutar búsqueda solo cuando se presiona el botón
+# Ejecutar búsqueda
 if search_button:
     search_films()
 
 
-# Sección en el sidebar para buscar filmes por director
+# Buscar filmes por director
 st.sidebar.header('Buscar filmes por director')
 director = st.sidebar.selectbox('Seleccione un director', data['director'].unique())
 search_button = st.sidebar.button('Filtrar Director')
@@ -61,7 +61,7 @@ search_button = st.sidebar.button('Filtrar Director')
 def filter_by_director(selected_director):
     return data[data['director'] == selected_director]
 
-# Filtrar los datos por director cuando se hace clic en el botón de búsqueda
+# Botón de búsqueda por director
 if search_button:
     filtered_data = filter_by_director(director)
     total_films = len(filtered_data)
@@ -71,7 +71,7 @@ if search_button:
         st.write(f'{total_films} filme(s) encontrado(s).')
         st.dataframe(filtered_data)
 
-# Formulario en el sidebar para insertar un nuevo filme
+# Insersión de un nuevo filme
 st.sidebar.header('Nuevo filme')
 
 name = st.sidebar.text_input('Name')
