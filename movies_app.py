@@ -87,8 +87,7 @@ if st.sidebar.button('Crear nuevo filme'):
             db.collection('movies').add(new_film)  # Inserta el nuevo filme en Firestore
             st.sidebar.success('Filme agregado exitosamente!')
             st.write("Nuevo filme agregado: ", new_film)
-            # Refrescar los datos para incluir el nuevo registro
-            data = load_data()
+            load_data.clear_cache()
         except Exception as e:
             st.sidebar.error(f'Error al agregar el filme: {e}')
     else:
