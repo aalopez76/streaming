@@ -1,8 +1,8 @@
-import os
 import streamlit as st
-from google.cloud import firestore
 import pandas as pd
-import time
+from google.cloud import firestore
+from google.oauth2 import service_account
+import json
 
 # Conexión a Firestore usando credenciales JSON
 key_dict = json.loads(st.secrets["textkey"])
