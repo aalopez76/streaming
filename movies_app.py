@@ -88,6 +88,7 @@ if st.sidebar.button('Crear nuevo filme'):
             st.sidebar.success('Filme agregado exitosamente!')
             st.write("Nuevo filme agregado: ", new_film)
             load_data.clear_cache()
+            global data
             # Refrescar los datos para incluir el nuevo registro
             data = load_data()
         except Exception as e:
