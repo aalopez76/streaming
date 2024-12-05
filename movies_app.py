@@ -12,7 +12,7 @@ db = firestore.Client(credentials=creds, project="streaming-4e657")
 dbMovies = db.collection('movies')
 
 # Título de la aplicación en Streamlit
-st.title('Netflix app')
+st.title('MOVIES APP')
 
 # Función para cargar datos desde Firestore con caché
 @st.cache_data
