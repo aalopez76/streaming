@@ -37,7 +37,7 @@ if 'search_title' not in st.session_state:
     st.session_state.search_title = ""
 
 # Campo de entrada para título del filme
-search_title = st.sidebar.text_input('Título del filme', value=st.session_state.search_title)
+search_title = st.sidebar.text_input('Título del filme', value=st.session_state.search_title, key='search_title')
 
 # Botón de búsqueda
 search_button = st.sidebar.button('Buscar filmes')
@@ -114,5 +114,7 @@ if st.sidebar.button('Crear nuevo filme'):
             st.sidebar.error(f'Error al agregar el filme: {e}')
     else:
         st.sidebar.error('Por favor, completa todos los campos.')
+
+
 
 
