@@ -40,8 +40,6 @@ search_title = st.sidebar.text_input('Título del filme')
 search_button = st.sidebar.button('Buscar filmes')
 
 def search_films():
-    load_data.clear_cache()
-    
     filtered_data = data[data['name'].str.contains(search_title, case=False, na=False)]
     if filtered_data.empty:
         st.write('No se encontraron filmes con ese título.')
