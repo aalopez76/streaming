@@ -61,7 +61,6 @@ search_button = st.sidebar.button('Filtrar Director')
 def filter_by_director(selected_director):
     return data[data['director'] == selected_director]
 
-data = load_data()
 # Botón de búsqueda por director
 if search_button:
     filtered_data = filter_by_director(director)
@@ -95,4 +94,3 @@ if st.sidebar.button('Crear nuevo filme'):
             st.sidebar.error(f'Error al agregar el filme: {e}')
     else:
         st.sidebar.error('Por favor, completa todos los campos.')
-data = load_data()
