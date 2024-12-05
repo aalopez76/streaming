@@ -46,7 +46,7 @@ def search_films():
     else:
         st.write(f'{len(filtered_data)} filme(s) encontrado(s).')
         st.dataframe(filtered_data)
-
+data = load_data()
 # Ejecutar búsqueda
 if search_button:
     search_films()
@@ -61,6 +61,7 @@ search_button = st.sidebar.button('Filtrar Director')
 def filter_by_director(selected_director):
     return data[data['director'] == selected_director]
 
+data = load_data()
 # Botón de búsqueda por director
 if search_button:
     filtered_data = filter_by_director(director)
@@ -94,9 +95,4 @@ if st.sidebar.button('Crear nuevo filme'):
             st.sidebar.error(f'Error al agregar el filme: {e}')
     else:
         st.sidebar.error('Por favor, completa todos los campos.')
-
-if st.sidebar.button('Refrescar datos'):
-    
-    data = load_data()
-    st.sidebar.success('Datos actualizados!')
-
+data = load_data()
