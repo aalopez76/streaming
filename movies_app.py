@@ -40,7 +40,7 @@ search_button = st.sidebar.button('Buscar filmes')
 
 def search_films():
     # Recargar datos para garantizar que sean los más recientes
-    load_data.clear_cache()
+    st.cache_data.clear()
     current_data = load_data()
     
     # Filtrar datos por título
@@ -62,7 +62,7 @@ filter_button = st.sidebar.button('Filtrar Director')
 
 # Función para filtrar datos por director
 def filter_by_director(selected_director):
-    load_data.clear_cache()
+    st.cache_data.clear()
     current_data = load_data()
     return current_data[current_data['director'] == selected_director]
 
@@ -102,7 +102,7 @@ if st.sidebar.button('Crear nuevo filme'):
             st.session_state.new_film_fields = {"name": "", "company": "", "director": "", "genre": ""}
             
             # Actualizar los datos
-            load_data.clear_cache()
+            st.cache_data.clear()
             data = load_data()
         except Exception as e:
             st.sidebar.error(f'Error al agregar el filme: {e}')
