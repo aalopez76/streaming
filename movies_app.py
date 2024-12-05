@@ -29,13 +29,17 @@ if st.sidebar.checkbox('Mostrar todos los filmes'):
     st.subheader('Todos los filmes')
     st.dataframe(data)
 
-# Variable de estado para controlar la ejecución de la búsqueda
-if 'search_executed' not in st.session_state:
-    st.session_state.search_executed = False
-
 # Buscar filmes por título
 st.sidebar.header('Buscar filmes')
-search_title = st.sidebar.text_input('Título del filme')
+
+# Inicializar el estado del campo de búsqueda si no existe
+if 'search_title' not in st.session_state:
+    st.session_state.search_title = ""
+
+# Campo de entrada para título del filme
+search_title = st.sidebar.text_input('Título del filme', value=st.session_state.search_title)
+
+# Botón de búsqueda
 search_button = st.sidebar.button('Buscar filmes')
 
 def search_films():
@@ -44,7 +48,7 @@ def search_films():
     current_data = load_data()
     
     # Filtrar datos por título
-    filtered_data = current_data[current_data['name'].str.contains(search_title, case=False, na=False)]
+    filtered_data = current_data[current_data['name'].str.contains(st.session_state.search_title, case=False, na=False)]
     if filtered_data.empty:
         st.write('No se encontraron filmes con ese título.')
     else:
@@ -54,6 +58,8 @@ def search_films():
 # Ejecutar búsqueda
 if search_button:
     search_films()
+    # Limpiar el campo de búsqueda después de buscar
+    st.session_state.search_title = ""
 
 # Buscar filmes por director
 st.sidebar.header('Buscar filmes por director')
@@ -108,4 +114,5 @@ if st.sidebar.button('Crear nuevo filme'):
             st.sidebar.error(f'Error al agregar el filme: {e}')
     else:
         st.sidebar.error('Por favor, completa todos los campos.')
+
 
