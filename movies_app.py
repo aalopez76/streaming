@@ -1,3 +1,4 @@
+%%writefile /content/streaming/movies_app.py
 import streamlit as st
 import pandas as pd
 from google.cloud import firestore
@@ -17,12 +18,11 @@ st.title('Netflix app')
 # Función para cargar datos desde Firestore con caché
 @st.cache_data
 def load_data():
-  data_ref = list(db.collection(u'movies').stream())
-  data_dict = list(map(lambda x: x.to_dict(), data_ref))
-  data = pd.DataFrame(data_dict)
-  return data
+    data_ref = list(db.collection(u'movies').stream())
+    data_dict = list(map(lambda x: x.to_dict(), data_ref))
+    return pd.DataFrame(data_dict)
 
-# Cargar datos usando la función
+# Cargar datos iniciales
 data = load_data()
 
 # Checkbox para mostrar todos los filmes
@@ -40,29 +40,35 @@ search_title = st.sidebar.text_input('Título del filme')
 search_button = st.sidebar.button('Buscar filmes')
 
 def search_films():
-    filtered_data = data[data['name'].str.contains(search_title, case=False, na=False)]
+    # Recargar datos para garantizar que sean los más recientes
+    load_data.clear_cache()
+    current_data = load_data()
+    
+    # Filtrar datos por título
+    filtered_data = current_data[current_data['name'].str.contains(search_title, case=False, na=False)]
     if filtered_data.empty:
         st.write('No se encontraron filmes con ese título.')
     else:
         st.write(f'{len(filtered_data)} filme(s) encontrado(s).')
         st.dataframe(filtered_data)
-data = load_data()
+
 # Ejecutar búsqueda
 if search_button:
     search_films()
 
-
 # Buscar filmes por director
 st.sidebar.header('Buscar filmes por director')
 director = st.sidebar.selectbox('Seleccione un director', data['director'].unique())
-search_button = st.sidebar.button('Filtrar Director')
+filter_button = st.sidebar.button('Filtrar Director')
 
 # Función para filtrar datos por director
 def filter_by_director(selected_director):
-    return data[data['director'] == selected_director]
+    load_data.clear_cache()
+    current_data = load_data()
+    return current_data[current_data['director'] == selected_director]
 
 # Botón de búsqueda por director
-if search_button:
+if filter_button:
     filtered_data = filter_by_director(director)
     total_films = len(filtered_data)
     if total_films == 0:
@@ -74,10 +80,15 @@ if search_button:
 # Insersión de un nuevo filme
 st.sidebar.header('Nuevo filme')
 
-name = st.sidebar.text_input('Name')
-company = st.sidebar.text_input('Company')
-director = st.sidebar.text_input('Director')
-genre = st.sidebar.text_input('Genre')
+# Variables para los campos del nuevo filme
+if 'new_film_fields' not in st.session_state:
+    st.session_state.new_film_fields = {"name": "", "company": "", "director": "", "genre": ""}
+
+# Campos para ingresar el nuevo filme
+name = st.sidebar.text_input('Name', value=st.session_state.new_film_fields["name"])
+company = st.sidebar.text_input('Company', value=st.session_state.new_film_fields["company"])
+director = st.sidebar.text_input('Director', value=st.session_state.new_film_fields["director"])
+genre = st.sidebar.text_input('Genre', value=st.session_state.new_film_fields["genre"])
 
 # Botón para agregar un nuevo filme
 if st.sidebar.button('Crear nuevo filme'):
@@ -87,10 +98,15 @@ if st.sidebar.button('Crear nuevo filme'):
             db.collection('movies').add(new_film)  # Inserta el nuevo filme en Firestore
             st.sidebar.success('Filme agregado exitosamente!')
             st.write("Nuevo filme agregado: ", new_film)
+            
+            # Limpiar campos de entrada
+            st.session_state.new_film_fields = {"name": "", "company": "", "director": "", "genre": ""}
+            
+            # Actualizar los datos
             load_data.clear_cache()
-            # Refrescar los datos para incluir el nuevo registro
             data = load_data()
         except Exception as e:
             st.sidebar.error(f'Error al agregar el filme: {e}')
     else:
         st.sidebar.error('Por favor, completa todos los campos.')
+
