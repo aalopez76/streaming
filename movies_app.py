@@ -96,7 +96,7 @@ if st.sidebar.button('Crear nuevo filme'):
         st.sidebar.error('Por favor, completa todos los campos.')
 
 if st.sidebar.button('Refrescar datos'):
-    load_data.clear_cache()
+    
     data = load_data()
     st.sidebar.success('Datos actualizados!')
 
